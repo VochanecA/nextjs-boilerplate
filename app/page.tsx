@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import {
-  Hero1,
+  Hero,
   Features,
   Pricing,
   CTA,
@@ -16,7 +16,7 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col">
       {/* Hero Section */}
-      <Hero1 />
+      <Hero/>
 
       {/* Tech Stack Logos */}
       <section className="bg-card py-12">

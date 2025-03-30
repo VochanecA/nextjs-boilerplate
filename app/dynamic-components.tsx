@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic';
 import { Skeleton } from "@/components/ui/skeleton";
 
-export const Hero1 = dynamic(() => import('@/components/Hero'), {
+export const Hero = dynamic(() => import('@/components/Hero'), {
   loading: () => <Skeleton className="h-[80vh] w-full" />,
   ssr: false
 });

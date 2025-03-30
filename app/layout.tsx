@@ -20,8 +20,19 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Image from "next/image";
+import Head from "next/head";
 
 const inter = Inter({ subsets: ["latin"] });
+
+// Define your default metadata
+const defaultMetadata = {
+  title: "Next.js Boilerplate - Modern Web Development Starter",
+  description: "A feature-rich Next.js boilerplate with TypeScript, Tailwind CSS, and modern web development tools to kickstart your projects.",
+  keywords: "Next.js, boilerplate, TypeScript, Tailwind CSS, React, web development, starter template",
+  url: "https://yourwebsite.com",
+  image: "https://yourwebsite.com/og-image.jpg",
+  twitterHandle: "@yourhandle"
+};
 
 const navItems = [
   { name: "Home", href: "/" },
@@ -77,6 +88,50 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <Head>
+        {/* Primary Meta Tags */}
+        <title>{defaultMetadata.title}</title>
+        <meta name="title" content={defaultMetadata.title} />
+        <meta name="description" content={defaultMetadata.description} />
+        <meta name="keywords" content={defaultMetadata.keywords} />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="robots" content="index, follow" />
+        <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="language" content="English" />
+        <meta name="revisit-after" content="7 days" />
+        <meta name="author" content="Your Name or Company" />
+        
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={defaultMetadata.url} />
+        <meta property="og:title" content={defaultMetadata.title} />
+        <meta property="og:description" content={defaultMetadata.description} />
+        <meta property="og:image" content={defaultMetadata.image} />
+        <meta property="og:site_name" content="Next.js Boilerplate" />
+        
+        {/* Twitter */}
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content={defaultMetadata.url} />
+        <meta property="twitter:title" content={defaultMetadata.title} />
+        <meta property="twitter:description" content={defaultMetadata.description} />
+        <meta property="twitter:image" content={defaultMetadata.image} />
+        <meta property="twitter:creator" content={defaultMetadata.twitterHandle} />
+        
+        {/* Favicon */}
+        <link rel="icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+        <link rel="manifest" href="/site.webmanifest" />
+        
+        {/* Canonical URL */}
+        <link rel="canonical" href={defaultMetadata.url} />
+        
+        {/* Theme Color for Chrome, Firefox OS and Opera */}
+        <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+        <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
+      </Head>
+      
       <body className={inter.className}>
         <ThemeProvider
           attribute="class"
@@ -90,7 +145,7 @@ export default function RootLayout({
               <div className="flex items-center gap-10">
                 <Link href="/" className="flex items-center gap-2 font-semibold">
                   <Image
-       src={orangeLogo}
+                    src={orangeLogo}
                     alt="Alen Logo"
                     width={32}
                     height={32}
@@ -130,7 +185,7 @@ export default function RootLayout({
                   <SheetHeader>
                     <SheetTitle className="flex items-center gap-2">
                       <Image
-                   src={orangeLogo}
+                        src={orangeLogo}
                         alt="Alen Logo"
                         width={24}
                         height={24}
@@ -170,14 +225,14 @@ export default function RootLayout({
             <div className="mx-auto max-w-7xl px-6 lg:px-8">
               <div className="flex flex-col items-center justify-between gap-8 md:flex-row">
                 <div className="flex items-center gap-2">
-                <Image
-  src={orangeLogo}
-  alt="Alen Logo"
-  width={24}
-  height={24}
-  className="h-6 w-6 rounded-full"
-  priority
-/>
+                  <Image
+                    src={orangeLogo}
+                    alt="Alen Logo"
+                    width={24}
+                    height={24}
+                    className="h-6 w-6 rounded-full"
+                    priority
+                  />
                   <span className="text-lg font-semibold">Next.js Boilerplate</span>
                 </div>
                 <p className="text-sm text-muted-foreground">

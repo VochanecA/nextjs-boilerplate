@@ -1,8 +1,14 @@
 "use client";
 
 import { useTheme } from "next-themes";
+import Link from "next/link";
+import { Session } from "@supabase/supabase-js";
 
-export default function Hero1() {
+interface HeroProps {
+  session: Session | null;
+}
+
+export default function Hero({ session }: HeroProps) {
   const { theme } = useTheme();
 
   return (
@@ -34,12 +40,39 @@ export default function Hero1() {
               developing your SaaS projects. No more boring setups, clone, code
               and ship fast your apps.
             </p>
-            <div className="mt-10 flex items-center justify-center gap-x-6">
+            <div className="mt-10 flex flex-col items-center justify-center gap-6">
               <div className="flex w-full justify-center">
                 <p className="border rounded-lg p-4 shadow-sm border-border backdrop-blur-2xl lg:static lg:w-auto lg:rounded-xl lg:p-4 bg-card/30">
                   Next.js 15 Starter Kit - Get started by editing&nbsp;
                   <code className="font-mono font-bold">app/page.tsx</code>
                 </p>
+              </div>
+              
+              {/* Auth-aware buttons */}
+              <div className="flex items-center gap-x-6">
+                {session ? (
+                  <Link
+                    href="/dashboard"
+                    className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-colors"
+                  >
+                    Go to Dashboard
+                  </Link>
+                ) : (
+                  <>
+                    <Link
+                      href="/auth/signup"
+                      className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-colors"
+                    >
+                      Get started
+                    </Link>
+                    <Link
+                      href="/auth/login"
+                      className="text-sm font-semibold leading-6 text-foreground hover:text-indigo-500 transition-colors"
+                    >
+                      Sign in <span aria-hidden="true">→</span>
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
           </div>

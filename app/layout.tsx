@@ -3,7 +3,7 @@ import { ThemeProvider, useTheme } from "@/components/theme-provider";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Button } from "@/components/ui/button";
-import { Moon, Sun, Monitor, Menu } from "lucide-react";
+import { Moon, Sun, Monitor, Menu, LogOut } from "lucide-react";
 import orangeLogo from '@/public/orange-logo.png';
 import Link from "next/link";
 import { 
@@ -21,10 +21,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Image from "next/image";
 import Head from "next/head";
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase/client";
+import { useRouter } from "next/navigation";
 
 const inter = Inter({ subsets: ["latin"] });
 
-// Define your default metadata
+// Default metadata
 const defaultMetadata = {
   title: "Next.js Boilerplate - Modern Web Development Starter",
   description: "A feature-rich Next.js boilerplate with TypeScript, Tailwind CSS, and modern web development tools to kickstart your projects.",
@@ -81,55 +84,98 @@ function ThemeToggle({ mobile = false }: { mobile?: boolean }) {
   );
 }
 
+function UserAvatar({ session }: { session: any }) {
+  const router = useRouter();
+  
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    router.refresh();
+  };
+
+  return (
+    <div className="flex items-center gap-4">
+   <DropdownMenu>
+  <DropdownMenuTrigger asChild>
+    <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+      <Image
+        src="/alex.png"
+        alt={session.user.email || "User"}
+        width={32}
+        height={32}
+        className="rounded-full"
+      />
+    </Button>
+  </DropdownMenuTrigger>
+  <DropdownMenuContent align="end">
+    <DropdownMenuItem className="flex flex-col items-start gap-1 pointer-events-none">
+      <p className="font-medium">{session.user.user_metadata?.display_name || session.user.email}</p>
+      <p className="text-xs text-muted-foreground">{session.user.email}</p>
+    </DropdownMenuItem>
+    {/* New Dashboard Link */}
+    <DropdownMenuItem asChild>
+      <a href="/dashboard" className="flex items-center gap-2">
+        <span>Dashboard</span>
+      </a>
+    </DropdownMenuItem>
+    {/* Sign-out Button */}
+    <DropdownMenuItem onClick={handleSignOut} className="text-red-600">
+      <LogOut className="mr-2 h-4 w-4" />
+      <span>Sign out</span>
+    </DropdownMenuItem>
+  </DropdownMenuContent>
+</DropdownMenu>
+
+    </div>
+  );
+}
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const [session, setSession] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
+
+  useEffect(() => {
+    const getSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setSession(session);
+      setLoading(false);
+    };
+
+    getSession();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  if (loading) {
+    return (
+      <html lang="en" suppressHydrationWarning>
+        <body className={`${inter.className} flex items-center justify-center h-screen`}>
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+        </body>
+      </html>
+    );
+  }
+
   return (
     <html lang="en" suppressHydrationWarning>
       <Head>
-        {/* Primary Meta Tags */}
         <title>{defaultMetadata.title}</title>
-        <meta name="title" content={defaultMetadata.title} />
         <meta name="description" content={defaultMetadata.description} />
         <meta name="keywords" content={defaultMetadata.keywords} />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="robots" content="index, follow" />
-        <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
-        <meta name="language" content="English" />
-        <meta name="revisit-after" content="7 days" />
-        <meta name="author" content="Your Name or Company" />
-        
-        {/* Open Graph / Facebook */}
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content={defaultMetadata.url} />
         <meta property="og:title" content={defaultMetadata.title} />
         <meta property="og:description" content={defaultMetadata.description} />
         <meta property="og:image" content={defaultMetadata.image} />
-        <meta property="og:site_name" content="Next.js Boilerplate" />
-        
-        {/* Twitter */}
-        <meta property="twitter:card" content="summary_large_image" />
-        <meta property="twitter:url" content={defaultMetadata.url} />
-        <meta property="twitter:title" content={defaultMetadata.title} />
-        <meta property="twitter:description" content={defaultMetadata.description} />
-        <meta property="twitter:image" content={defaultMetadata.image} />
-        <meta property="twitter:creator" content={defaultMetadata.twitterHandle} />
-        
-        {/* Favicon */}
+        <meta name="twitter:card" content="summary_large_image" />
         <link rel="icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-        <link rel="manifest" href="/site.webmanifest" />
-        
-        {/* Canonical URL */}
-        <link rel="canonical" href={defaultMetadata.url} />
-        
-        {/* Theme Color for Chrome, Firefox OS and Opera */}
-        <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
-        <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
       </Head>
       
       <body className={inter.className}>
@@ -141,12 +187,11 @@ export default function RootLayout({
         >
           <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <div className="container flex h-16 items-center justify-between px-4">
-              {/* Logo and Desktop Nav */}
               <div className="flex items-center gap-10">
                 <Link href="/" className="flex items-center gap-2 font-semibold">
                   <Image
                     src={orangeLogo}
-                    alt="Alen Logo"
+                    alt="Logo"
                     width={32}
                     height={32}
                     className="h-8 w-8 rounded-full"
@@ -167,14 +212,22 @@ export default function RootLayout({
                 </nav>
               </div>
 
-              {/* Desktop Theme Toggle and Auth Buttons */}
-              <div className="hidden md:flex items-center gap-2">
+              <div className="hidden md:flex items-center gap-4">
                 <ThemeToggle />
-                <Button variant="outline">Login</Button>
-                <Button>Sign Up</Button>
+                {session ? (
+                  <UserAvatar session={session} />
+                ) : (
+                  <>
+                    <Button variant="outline" asChild>
+                      <Link href="/auth/login">Login</Link>
+                    </Button>
+                    <Button asChild>
+                      <Link href="/auth/signup">Sign Up</Link>
+                    </Button>
+                  </>
+                )}
               </div>
 
-              {/* Mobile Menu Trigger */}
               <Sheet>
                 <SheetTrigger asChild className="md:hidden">
                   <Button variant="ghost" size="icon">
@@ -186,7 +239,7 @@ export default function RootLayout({
                     <SheetTitle className="flex items-center gap-2">
                       <Image
                         src={orangeLogo}
-                        alt="Alen Logo"
+                        alt="Logo"
                         width={24}
                         height={24}
                         className="h-6 w-6 rounded-full"
@@ -210,8 +263,28 @@ export default function RootLayout({
                       <ThemeToggle mobile />
                     </div>
                     <div className="flex flex-col gap-2">
-                      <Button variant="outline" className="w-full">Login</Button>
-                      <Button className="w-full">Sign Up</Button>
+                      {session ? (
+                        <Button 
+                          variant="destructive" 
+                          className="w-full"
+                          onClick={async () => {
+                            await supabase.auth.signOut();
+                            router.refresh();
+                          }}
+                        >
+                          <LogOut className="mr-2 h-4 w-4" />
+                          Sign Out
+                        </Button>
+                      ) : (
+                        <>
+                          <Button variant="outline" className="w-full" asChild>
+                            <Link href="/auth/login">Login</Link>
+                          </Button>
+                          <Button className="w-full" asChild>
+                            <Link href="/auth/signup">Sign Up</Link>
+                          </Button>
+                        </>
+                      )}
                     </div>
                   </div>
                 </SheetContent>
@@ -227,7 +300,7 @@ export default function RootLayout({
                 <div className="flex items-center gap-2">
                   <Image
                     src={orangeLogo}
-                    alt="Alen Logo"
+                    alt="Logo"
                     width={24}
                     height={24}
                     className="h-6 w-6 rounded-full"

@@ -7,16 +7,19 @@ import {
   VideoDemo,
   GitHubStats
 } from "./dynamic-components";
+import { supabase } from '@/lib/supabase/client'
+import Link from 'next/link'
 
 export const metadata: Metadata = {
   title: "Next.js Boilerplate - Launch Your SaaS Faster",
   description: "The ultimate Next.js starter kit with authentication, theming, payments, and more.",
 };
-export default function Home() {
+export default async function Home() {
+  const { data: { session } } = await supabase.auth.getSession()
   return (
     <main className="flex min-h-screen flex-col">
       {/* Hero Section */}
-      <Hero/>
+      <Hero session={session} />
 
       {/* Tech Stack Logos */}
       <section className="bg-card py-12">
@@ -29,7 +32,7 @@ export default function Home() {
               { name: "Next.js", logo: "/next.png" },
               { name: "Vercel", logo: "/vercel.png" },
               { name: "Prisma", logo: "/prisma.svg" },
-              { name: "Stripe", logo: "/stripe.png" },
+              { name: "Paddle", logo: "/paddle.png" },
               { name: "Clerk", logo: "/clerk.png" },
               { name: "Tailwind", logo: "/tailwind.svg" },
             ].map((tech) => (
@@ -85,19 +88,19 @@ export default function Home() {
               {
                 name: "Alex Johnson",
                 role: "Founder",
-                image: "/team/alex.jpg",
+                image: "/team/alex.png",
                 bio: "Full-stack developer with 10+ years of experience building SaaS products.",
               },
               {
                 name: "Sarah Chen",
                 role: "UI/UX Designer",
-                image: "/team/sarah.jpg",
+                image: "/team/miguel.png",
                 bio: "Specializes in creating intuitive developer experiences.",
               },
               {
                 name: "Miguel Rodriguez",
                 role: "DevOps Engineer",
-                image: "/team/miguel.jpg",
+                image: "/team/miguel.png",
                 bio: "Ensures the boilerplate is production-ready and scalable.",
               },
             ].map((person) => (

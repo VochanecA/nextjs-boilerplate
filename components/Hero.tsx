@@ -1,8 +1,12 @@
 "use client";
 
+import { useTheme } from "next-themes";
+
 export default function Hero1() {
+  const { theme } = useTheme();
+
   return (
-    <div className="bg-white">
+    <div className="bg-background">
       <div className="relative isolate px-6 pt-14 lg:px-8">
         <div
           className="absolute inset-x-0 -top-40 -z-10 transform-cpu overflow-hidden blur-3xl sm:-top-80"
@@ -19,21 +23,21 @@ export default function Hero1() {
         <div className="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
           <div className="hidden sm:mb-8 sm:flex sm:justify-center"></div>
           <div className="text-center">
-            <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
+            <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-6xl">
               Speed up your SaaS{" "}
-              <span className="bg-gradient-to-r from-indigo-500 to-[#9089fc] textsj inline-block text-transparent bg-clip-text">
+              <span className="bg-gradient-to-r from-indigo-500 to-[#9089fc] inline-block text-transparent bg-clip-text">
                 development
-              </span>{" "}
+              </span>
             </h1>
-            <p className="mt-10 text-lg leading-8 text-gray-600">
-              A NextJS boilerplate with pretty much all you need to start
-              developping your SaaS projects. No more boring setups, clone, code
+            <p className="mt-10 text-lg leading-8 text-muted-foreground">
+              A NextJS 15 boilerplate with pretty much all you need to start
+              developing your SaaS projects. No more boring setups, clone, code
               and ship fast your apps.
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
               <div className="flex w-full justify-center">
-                <p className="border rounded-lg p-4 shadow-sm border-gray-300 backdrop-blur-2xl lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-                  Next.js Starter Kit - Get started by editing&nbsp;
+                <p className="border rounded-lg p-4 shadow-sm border-border backdrop-blur-2xl lg:static lg:w-auto lg:rounded-xl lg:p-4 bg-card/30">
+                  Next.js 15 Starter Kit - Get started by editing&nbsp;
                   <code className="font-mono font-bold">app/page.tsx</code>
                 </p>
               </div>

@@ -70,23 +70,22 @@ export default function Dashboard() {
         setSession(session);
 
         // Get user profile
-        const { data: profileData, error: profileError } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', session.user.id)
-          .single();
+const { data: profileData, error: profileError } = await supabase
+  .from('profiles')
+  .select('*')
+  .eq('id', session.user.id)
+  .single();
 
-        if (profileError) {
-          console.error('Profile error:', profileError);
-          // Fallback to auth user data
-          setUserDetails({
-            id: session.user.id,
-            email: session.user.email || '',
-            display_name: session.user.user_metadata?.display_name || null
-          });
-        } else {
-          setUserDetails(profileData);
-        }
+if (profileError) {
+  // Fallback to auth user data
+  setUserDetails({
+    id: session.user.id,
+    email: session.user.email || '',
+    display_name: session.user.user_metadata?.display_name || null
+  });
+} else {
+  setUserDetails(profileData);
+}
 
       } catch (error) {
         console.error('Dashboard error:', error);
